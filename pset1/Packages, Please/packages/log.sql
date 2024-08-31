@@ -21,3 +21,26 @@ where "id" = (
                     and contents = 'Congratulatory letter'
             )
     );
+-- *** The Devious Delivery ***
+-- get the packages with no From address
+select id
+from packages
+where "from_address_id" is null;
+-- sinde the previous query returned a single element, we can assume it is our expected package. no we can look where it ended up at
+select *
+from addresses
+where id = (
+        select "address_id"
+        from scans
+        where "package_id" = (
+                select id
+                from packages
+                where "from_address_id" is null
+            )
+            and "action" = 'Drop'
+    );
+-- get the contents of the package
+select contents
+from packages
+where "from_address_id" is null; 
+-- *** The Forgotten Gift ***
